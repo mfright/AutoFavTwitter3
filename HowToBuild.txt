@@ -1,3 +1,0 @@
-VisualStudio2017で、WindowsFormApplication作成。
-NugetでCefSharp.WinFormをインストール。
-Form.csへ同梱Form.csのコードをコピペ。

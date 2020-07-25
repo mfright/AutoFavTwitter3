@@ -1,0 +1,43 @@
+//ボタン一覧取得
+var icons = document.getElementsByClassName('css-1dbjc4n r-xoduu5');
+
+
+
+
+
+for (var i = 0; i < icons.length; i++) {
+	//ボタンごとに
+	
+	// 先祖ノード取得
+	myParent = icons[i].parentNode;
+	myParent = myParent.parentNode;
+	myParent = myParent.parentNode;
+	myParent = myParent.parentNode;
+	myParent = myParent.parentNode;
+	
+	if(myParent.innerHTML.indexOf('プロモ') > 0){
+		// プロモツイートのとき
+		// なにもしない
+		
+	}else{
+		
+		// 子要素を取得
+		childList = icons[i].childNodes; 
+		
+		if(childList[1] != null){
+			if(childList[1].innerHTML != null){
+				//最初の子要素が空でなければ
+				
+				if(childList[1].innerHTML.indexOf('965z') > 0){
+					//最初の子要素に、未いいねボタン特有の文字列が含まれていたら
+					
+					//クリックする。
+					icons[i].click();
+					
+					
+					break;
+				}
+			}
+		}
+	}
+}

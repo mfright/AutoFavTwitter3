@@ -95,6 +95,7 @@ namespace InstaRefollow
                     StreamReader sr = new StreamReader("keyword.ini", Encoding.GetEncoding("Shift_JIS"));
                     string keyword = sr.ReadToEnd();
                     sr.Close();
+                    //keyword = keyword.Replace("%", "%23");
 
                     // Load interval seconds.
                     StreamReader sre = new StreamReader("interval.ini", Encoding.GetEncoding("Shift_JIS"));
@@ -105,6 +106,10 @@ namespace InstaRefollow
                         // Decliment offset.
                         intBase -= 10;
                     }
+                    else
+                    {
+                        intBase = 0;
+                    }
 
                     // Load limitter.
                     StreamReader srl = new StreamReader("limitter.ini", Encoding.GetEncoding("Shift_JIS"));
@@ -114,13 +119,11 @@ namespace InstaRefollow
 
                     // Wait until login.
                     Thread.Sleep(60000);
-                    //Thread.Sleep(3000);
+
                     
-
-
                     
                     // Sring of JavaScript code.
-                    string jsScript;
+                    string jsScript = loadJScript();
 
                     for (int count = 0; count < limitter; count++)
                     {
@@ -129,29 +132,21 @@ namespace InstaRefollow
                         Thread.Sleep(1000);
                         chromeBrowser.Load("https://twitter.com/search?q=%23" + keyword + "&src=trend_click&f=live");
 
-                        
+                        // Scroll down and up.
+                        Thread.Sleep(4000);
+                        chromeBrowser.ExecuteScriptAsync("scrollTo(0,10000);");
+                        Thread.Sleep(1000);
+                        chromeBrowser.ExecuteScriptAsync("scrollTo(0,0);");
+
 
                         // Wait until inerval + random.
                         Random rnd = new System.Random();
-                        int interval = (intBase + rnd.Next(0, 20)) * 1000;
+                        int interval = (intBase + rnd.Next(0, 10)) * 1000;
                         Thread.Sleep(interval);
 
 
                         // Click "Like" button of the latest tweet.
                         UpWindow();
-                        jsScript =  "var buttons = document.getElementsByClassName('css-1dbjc4n r-xoduu5'); " +
-                                    "for (var i = 0; i < buttons.length; i++) {" +
-                                    "   childList = buttons[i].childNodes; " +
-                                    "   if(childList[1] != null){" +
-                                    "       if(childList[1].innerHTML != null){" +
-                                    //"           alert(childList[1].innerHTML);" +
-                                    "           if(childList[1].innerHTML.indexOf('965z') > 0){" +
-                                    "               buttons[i].click();" +
-                                    "               break;" +
-                                    "           }"+
-                                    "       }" +
-                                    "   }"+                                    
-                                    "}";
                         chromeBrowser.ExecuteScriptAsync(jsScript);                        
                         
 
@@ -225,6 +220,17 @@ namespace InstaRefollow
             Cef.Shutdown();
 
             thread.Abort();
+        }
+
+        private String loadJScript()
+        {
+            StreamReader sr = new StreamReader("jscript.txt", Encoding.GetEncoding("Shift_JIS"));
+
+            string text = sr.ReadToEnd();
+
+            sr.Close();
+
+            return text;
         }
     }
 }
